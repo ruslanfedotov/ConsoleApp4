@@ -208,4 +208,73 @@ namespace TextRPG
         }
     }
 
-    
+    // Класс игрока
+    public class Player
+    {
+        public int HP { get; private set; }
+        public int MaxHP { get; private set; }
+        public Weapon Weapon { get; private set; }
+        public Armor Armor { get; private set; }
+        public bool IsFrozen { get; set; }
+        public int Attack => Weapon?.Attack ?? 0;
+        public int Defense => Armor?.Defense ?? 0;
+
+        private Random random;
+
+        public Player(int maxHP)
+        {
+            MaxHP = maxHP;
+            HP = maxHP;
+            random = new Random();
+
+            // Стартовое снаряжение
+            Weapon = new Weapon("говно", 100, 100);
+            Armor = new Armor("нет брони", 100, 100);
+        }
+
+        public void TakeDamage(int damage)
+        {
+            HP -= damage;
+            if (HP < 0) HP = 0;
+        }
+
+        public void Heal()
+        {
+            HP = MaxHP;
+        }
+
+        public void EquipWeapon(Weapon weapon)
+        {
+            Weapon = weapon;
+        }
+
+        public void EquipArmor(Armor armor)
+        {
+            Armor = armor;
+        }
+
+        public bool TryDodge()
+        {
+            return random.NextDouble() < 0.4; // 40% шанс уклонения
+        }
+
+        public int CalculateBlockedDamage(int incomingDamage)
+        {
+            double blockPercentage = 0.7 + (random.NextDouble() * 0.3); // 70-100% защиты
+            int blockedDamage = (int)(Defense * blockPercentage);
+            return Math.Max(0, incomingDamage - blockedDamage);
+        }
+
+        public string GetStatus()
+        {
+            return $"Игрок - HP: {HP}/{MaxHP}, Атака: {Attack}, Защита: {Defense}";
+        }
+
+        public string GetEquipment()
+        {
+            return $"Оружие: {Weapon}\nДоспехи: {Armor}";
+        }
+    }
+
+    // Главный класс игры
+ 
