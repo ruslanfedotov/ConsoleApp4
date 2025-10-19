@@ -85,3 +85,79 @@ namespace TextRPG
             return $"{Name} (Полное восстановление здоровья)";
         }
     }
+
+    // Класс врага
+    public class Enemy
+    {
+        public string Name { get; protected set; }
+        public int HP { get; protected set; }
+        public int MaxHP { get; protected set; }
+        public int Attack { get; protected set; }
+        public int Defense { get; protected set; }
+        public EnemyType Type { get; protected set; }
+
+        public double CritChance { get; set; }
+        public double FreezeChance { get; set; }
+        public bool IgnoreDefense { get; set; }
+
+        protected Random random;
+
+        public Enemy(string name, int hp, int attack, int defense, EnemyType type)
+        {
+            Name = name;
+            MaxHP = hp;
+            HP = hp;
+            Attack = attack;
+            Defense = defense;
+            Type = type;
+            random = new Random();
+
+            // Установка особенностей по типу
+            switch (type)
+            {
+                case EnemyType.Goblin:
+                    CritChance = 0.2;
+                    break;
+                case EnemyType.Skeleton:
+                    IgnoreDefense = true;
+                    break;
+                case EnemyType.Mage:
+                    FreezeChance = 0.25;
+                    break;
+            }
+        }
+
+        public void TakeDamage(int damage)
+        {
+            HP -= damage;
+            if (HP < 0) HP = 0;
+        }
+
+        public int CalculateDamage(Player player)
+        {
+            int damage = Attack;
+
+            // Критический удар
+            if (random.NextDouble() < CritChance)
+            {
+                damage = (int)(damage * 1.5);
+                Console.WriteLine($"{Name} наносит критический удар!");
+            }
+
+            return damage;
+        }
+
+        public bool TryFreezePlayer()
+        {
+            return random.NextDouble() < FreezeChance;
+        }
+
+        public bool IsAlive => HP > 0;
+
+        public string GetStatus()
+        {
+            return $"{Name} - HP: {HP}/{MaxHP}, Атака: {Attack}, Защита: {Defense}";
+        }
+    }
+
+  
