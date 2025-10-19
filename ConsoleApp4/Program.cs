@@ -160,4 +160,52 @@ namespace TextRPG
         }
     }
 
-  
+    // Фабрика для создания врагов
+    public static class EnemyFactory
+    {
+        private static Random random = new Random();
+
+        public static Enemy CreateRegularEnemy()
+        {
+            var type = (EnemyType)random.Next(0, 3);
+
+            switch (type)
+            {
+                case EnemyType.Goblin:
+                    return new Enemy("Гоблин", 30, 8, 3, EnemyType.Goblin);
+                case EnemyType.Skeleton:
+                    return new Enemy("Скелет", 25, 10, 2, EnemyType.Skeleton);
+                case EnemyType.Mage:
+                    return new Enemy("Маг", 20, 12, 1, EnemyType.Mage);
+                default:
+                    return new Enemy("Гоблин", 30, 8, 3, EnemyType.Goblin);
+            }
+        }
+
+        public static Enemy CreateBoss()
+        {
+            var bossType = random.Next(0, 4);
+
+            switch (bossType)
+            {
+                case 0:
+                    var maximoleg = new Enemy("Максимолегович (Босс Гоблин)", 60, 12, 4, EnemyType.Goblin);
+                    maximoleg.CritChance = 0.3;
+                    return maximoleg;
+                case 1: 
+                    return new Enemy("Овал (Босс Скелет)", 63, 13, 3, EnemyType.Skeleton);
+                case 2: 
+                    var hello = new Enemy("Привет (Босс Маг)", 36, 19, 1, EnemyType.Mage);
+                    hello.FreezeChance = 0.35;
+                    return hello;
+                case 3:
+                    var sss = new Enemy("ССС (Босс Скелет-Маг)", 33, 18, 1, EnemyType.Skeleton);
+                    sss.FreezeChance = 0.4;
+                    return sss;
+                default:
+                    return new Enemy("Максимолегович (Босс Гоблин)", 60, 12, 4, EnemyType.Goblin);
+            }
+        }
+    }
+
+    
